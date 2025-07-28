@@ -1,42 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* SamvaadCop Design System - Indian Government Tricolor Theme */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Indian Tricolor Base Colors */
+    --saffron: 25 85% 60%;
+    --saffron-light: 25 85% 70%;
+    --saffron-dark: 25 85% 50%;
+    
+    --white: 0 0% 100%;
+    --white-warm: 45 25% 98%;
+    
+    --green: 142 60% 35%;
+    --green-light: 142 60% 45%;
+    --green-dark: 142 60% 25%;
+    
+    /* Government Navy for Text */
+    --navy: 220 40% 20%;
+    --navy-light: 220 40% 35%;
+    
+    /* Tricolor Gradient */
+    --gradient-tricolor: linear-gradient(135deg, hsl(var(--saffron)), hsl(var(--white-warm)), hsl(var(--green)));
+    --gradient-header: linear-gradient(90deg, hsl(var(--saffron)) 0%, hsl(var(--white-warm)) 50%, hsl(var(--green)) 100%);
+    
+    /* Base System Colors */
+    --background: var(--white-warm);
+    --foreground: var(--navy);
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card: var(--white);
+    --card-foreground: var(--navy);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: var(--white);
+    --popover-foreground: var(--navy);
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    --primary: var(--saffron);
+    --primary-foreground: var(--white);
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 220 20% 95%;
+    --secondary-foreground: var(--navy);
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent: var(--green);
+    --accent-foreground: var(--white);
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: var(--white);
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --border: 220 20% 88%;
+    --input: 220 20% 92%;
+    --ring: var(--saffron);
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+    
+    /* Success/Status Colors */
+    --success: var(--green);
+    --success-foreground: var(--white);
+    --warning: 45 85% 55%;
+    --warning-foreground: var(--navy);
+    
+    /* Shadows with Tricolor Tints */
+    --shadow-saffron: 0 4px 20px hsl(var(--saffron) / 0.15);
+    --shadow-green: 0 4px 20px hsl(var(--green) / 0.15);
+    --shadow-elegant: 0 8px 30px hsl(var(--navy) / 0.08);
+    
+    /* Animation Variables */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 
     --sidebar-background: 0 0% 98%;
 
@@ -94,12 +130,105 @@ All colors MUST be HSL.
   }
 }
 
+}
+
 @layer base {
   * {
     @apply border-border;
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-inter;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-pt-sans;
+  }
+}
+
+@layer components {
+  /* Tricolor Button Effects */
+  .btn-ripple {
+    @apply relative overflow-hidden;
+    transition: var(--transition-smooth);
+  }
+  
+  .btn-ripple::before {
+    content: '';
+    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
+    background: radial-gradient(circle, hsl(var(--saffron) / 0.3) 0%, transparent 70%);
+  }
+  
+  .btn-ripple:hover::before {
+    @apply opacity-100;
+  }
+  
+  .btn-ripple:active::before {
+    background: radial-gradient(circle, hsl(var(--green) / 0.4) 0%, transparent 70%);
+  }
+  
+  /* Chat Bubble Animations */
+  .chat-bubble-enter {
+    @apply opacity-0 translate-y-4 scale-95;
+    animation: chatBubbleEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  
+  @keyframes chatBubbleEnter {
+    to {
+      @apply opacity-100 translate-y-0 scale-100;
+    }
+  }
+  
+  /* Waveform Animation */
+  .waveform-bar {
+    @apply bg-primary;
+    animation: waveform 1.5s ease-in-out infinite alternate;
+  }
+  
+  @keyframes waveform {
+    0% { transform: scaleY(0.3); }
+    100% { transform: scaleY(1); }
+  }
+  
+  /* Modal Slide Transitions */
+  .modal-enter {
+    @apply opacity-0 scale-95 translate-y-8;
+    animation: modalEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  
+  @keyframes modalEnter {
+    to {
+      @apply opacity-100 scale-100 translate-y-0;
+    }
+  }
+  
+  /* Status Badge Pulse */
+  .status-pulse {
+    animation: statusPulse 2s ease-in-out infinite;
+  }
+  
+  @keyframes statusPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  
+  /* Accessibility Helpers */
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  }
+  
+  .skip-link {
+    @apply absolute -top-40 left-6 z-50 bg-primary text-primary-foreground px-4 py-2 rounded-md;
+    @apply focus:top-6 transition-all duration-300;
+  }
+  
+  /* Tricolor Hover Effects */
+  .tricolor-hover {
+    transition: var(--transition-spring);
+  }
+  
+  .tricolor-hover:hover {
+    box-shadow: var(--shadow-saffron);
+    transform: translateY(-2px);
   }
 }
