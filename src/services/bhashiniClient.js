@@ -4,9 +4,9 @@
  */
 
 const BHASHINI_CONFIG = {
-  baseUrl: process.env.NEXT_PUBLIC_BHASHINI_BASE_URL || 'https://dhruva-api.bhashini.gov.in/services',
-  apiKey: process.env.NEXT_PUBLIC_BHASHINI_API_KEY || '',
-  userId: process.env.NEXT_PUBLIC_BHASHINI_USER_ID || '',
+  baseUrl: import.meta.env.VITE_BHASHINI_BASE_URL || 'https://dhruva-api.bhashini.gov.in/services',
+  apiKey: import.meta.env.VITE_BHASHINI_API_KEY || '',
+  userId: import.meta.env.VITE_BHASHINI_USER_ID || '',
   
   // Pipeline configurations
   pipelines: {
