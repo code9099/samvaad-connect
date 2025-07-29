@@ -52,21 +52,30 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				// Indian Tricolor Theme Colors
+				// Enhanced Indian Tricolor Theme Colors
 				saffron: {
 					DEFAULT: 'hsl(var(--saffron))',
 					light: 'hsl(var(--saffron-light))',
-					dark: 'hsl(var(--saffron-dark))'
+					dark: 'hsl(var(--saffron-dark))',
+					glow: 'hsl(var(--saffron-glow))'
 				},
 				green: {
 					DEFAULT: 'hsl(var(--green))',
 					light: 'hsl(var(--green-light))',
-					dark: 'hsl(var(--green-dark))'
+					dark: 'hsl(var(--green-dark))',
+					glow: 'hsl(var(--green-glow))'
 				},
 				navy: {
 					DEFAULT: 'hsl(var(--navy))',
-					light: 'hsl(var(--navy-light))'
+					light: 'hsl(var(--navy-light))',
+					muted: 'hsl(var(--navy-muted))'
 				},
+				gold: {
+					DEFAULT: 'hsl(var(--gold))',
+					light: 'hsl(var(--gold-light))'
+				},
+				'white-warm': 'hsl(var(--white-warm))',
+				'white-cream': 'hsl(var(--white-cream))',
 				success: {
 					DEFAULT: 'hsl(var(--success))',
 					foreground: 'hsl(var(--success-foreground))'
@@ -74,6 +83,10 @@ export default {
 				warning: {
 					DEFAULT: 'hsl(var(--warning))',
 					foreground: 'hsl(var(--warning-foreground))'
+				},
+				info: {
+					DEFAULT: 'hsl(var(--info))',
+					foreground: 'hsl(var(--info-foreground))'
 				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
@@ -87,7 +100,7 @@ export default {
 				}
 			},
 			fontFamily: {
-				'pt-sans': ['PT Sans', 'sans-serif'],
+				'poppins': ['Poppins', 'sans-serif'],
 				'inter': ['Inter', 'sans-serif'],
 			},
 			borderRadius: {
@@ -99,10 +112,17 @@ export default {
 				'saffron': 'var(--shadow-saffron)',
 				'green': 'var(--shadow-green)',
 				'elegant': 'var(--shadow-elegant)',
+				'card': 'var(--shadow-card)',
+				'floating': 'var(--shadow-floating)',
+				'glow': 'var(--shadow-glow)',
 			},
 			backgroundImage: {
 				'tricolor': 'var(--gradient-tricolor)',
 				'header': 'var(--gradient-header)',
+				'saffron': 'var(--gradient-saffron)',
+				'green': 'var(--gradient-green)',
+				'card': 'var(--gradient-card)',
+				'glass': 'var(--gradient-glass)',
 			},
 			keyframes: {
 				'accordion-down': {

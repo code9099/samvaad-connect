@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,27 +8,37 @@
 
 @layer base {
   :root {
-    /* Indian Tricolor Base Colors */
+    /* Enhanced Indian Tricolor Base Colors */
     --saffron: 25 85% 60%;
-    --saffron-light: 25 85% 70%;
-    --saffron-dark: 25 85% 50%;
+    --saffron-light: 25 85% 75%;
+    --saffron-dark: 25 85% 45%;
+    --saffron-glow: 25 85% 80%;
     
     --white: 0 0% 100%;
-    --white-warm: 45 25% 98%;
+    --white-warm: 30 25% 98%;
+    --white-cream: 35 25% 96%;
     
-    --green: 142 60% 35%;
-    --green-light: 142 60% 45%;
-    --green-dark: 142 60% 25%;
+    --green: 142 65% 35%;
+    --green-light: 142 65% 50%;
+    --green-dark: 142 65% 25%;
+    --green-glow: 142 65% 60%;
     
-    /* Government Navy for Text */
-    --navy: 220 40% 20%;
-    --navy-light: 220 40% 35%;
+    /* Enhanced Government Colors */
+    --navy: 220 45% 18%;
+    --navy-light: 220 45% 30%;
+    --navy-muted: 220 30% 25%;
+    --gold: 45 90% 55%;
+    --gold-light: 45 90% 70%;
     
-    /* Tricolor Gradient */
-    --gradient-tricolor: linear-gradient(135deg, hsl(var(--saffron)), hsl(var(--white-warm)), hsl(var(--green)));
+    /* Modern Gradients */
+    --gradient-tricolor: linear-gradient(135deg, hsl(var(--saffron)) 0%, hsl(var(--white-warm)) 45%, hsl(var(--green)) 100%);
     --gradient-header: linear-gradient(90deg, hsl(var(--saffron)) 0%, hsl(var(--white-warm)) 50%, hsl(var(--green)) 100%);
+    --gradient-saffron: linear-gradient(135deg, hsl(var(--saffron-light)) 0%, hsl(var(--saffron)) 100%);
+    --gradient-green: linear-gradient(135deg, hsl(var(--green-light)) 0%, hsl(var(--green)) 100%);
+    --gradient-card: linear-gradient(135deg, hsl(var(--white)) 0%, hsl(var(--white-warm)) 100%);
+    --gradient-glass: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
     
-    /* Base System Colors */
+    /* Enhanced System Colors */
     --background: var(--white-warm);
     --foreground: var(--navy);
 
@@ -41,38 +51,45 @@
     --primary: var(--saffron);
     --primary-foreground: var(--white);
 
-    --secondary: 220 20% 95%;
+    --secondary: 220 25% 95%;
     --secondary-foreground: var(--navy);
 
-    --muted: 220 15% 96%;
-    --muted-foreground: 220 15% 45%;
+    --muted: 220 20% 96%;
+    --muted-foreground: 220 20% 45%;
 
     --accent: var(--green);
     --accent-foreground: var(--white);
 
-    --destructive: 0 70% 55%;
+    --destructive: 0 75% 55%;
     --destructive-foreground: var(--white);
 
-    --border: 220 20% 88%;
-    --input: 220 20% 92%;
+    --border: 220 25% 90%;
+    --input: 220 25% 94%;
     --ring: var(--saffron);
 
     --radius: 0.75rem;
     
-    /* Success/Status Colors */
+    /* Enhanced Status Colors */
     --success: var(--green);
     --success-foreground: var(--white);
-    --warning: 45 85% 55%;
+    --warning: 45 90% 60%;
     --warning-foreground: var(--navy);
+    --info: 210 90% 60%;
+    --info-foreground: var(--white);
     
-    /* Shadows with Tricolor Tints */
-    --shadow-saffron: 0 4px 20px hsl(var(--saffron) / 0.15);
-    --shadow-green: 0 4px 20px hsl(var(--green) / 0.15);
-    --shadow-elegant: 0 8px 30px hsl(var(--navy) / 0.08);
+    /* Enhanced Shadows with Depth */
+    --shadow-saffron: 0 8px 32px hsl(var(--saffron) / 0.15);
+    --shadow-green: 0 8px 32px hsl(var(--green) / 0.15);
+    --shadow-elegant: 0 12px 40px hsl(var(--navy) / 0.1);
+    --shadow-card: 0 4px 24px hsl(var(--navy) / 0.06);
+    --shadow-floating: 0 16px 48px hsl(var(--navy) / 0.12);
+    --shadow-glow: 0 0 32px hsl(var(--saffron) / 0.2);
     
-    /* Animation Variables */
+    /* Modern Animation Variables */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --transition-slow: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     --sidebar-background: 0 0% 98%;
 
@@ -136,36 +153,116 @@
   }
 
   body {
-    @apply bg-background text-foreground font-inter;
+    @apply bg-background text-foreground font-inter antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply font-pt-sans;
+    @apply font-poppins font-semibold tracking-tight;
   }
+  
+  h1 { @apply text-4xl lg:text-5xl; }
+  h2 { @apply text-3xl lg:text-4xl; }
+  h3 { @apply text-2xl lg:text-3xl; }
+  h4 { @apply text-xl lg:text-2xl; }
+  h5 { @apply text-lg lg:text-xl; }
+  h6 { @apply text-base lg:text-lg; }
 }
 
 @layer components {
-  /* Tricolor Button Effects */
-  .btn-ripple {
-    @apply relative overflow-hidden;
+  /* Enhanced Government Card Styles */
+  .gov-card {
+    @apply bg-gradient-to-br from-white to-white-warm border border-border rounded-xl;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition-spring);
+  }
+  
+  .gov-card:hover {
+    box-shadow: var(--shadow-floating);
+    transform: translateY(-2px);
+  }
+  
+  .gov-card-header {
+    @apply bg-gradient-to-r from-saffron/10 via-white-warm to-green/10 p-6 rounded-t-xl border-b;
+  }
+  
+  /* Enhanced Button Styles */
+  .btn-primary {
+    @apply bg-gradient-to-r from-saffron to-saffron-dark text-white font-medium px-6 py-3 rounded-lg;
+    box-shadow: var(--shadow-saffron);
+    transition: var(--transition-spring);
+  }
+  
+  .btn-primary:hover {
+    @apply scale-105;
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .btn-secondary {
+    @apply bg-gradient-to-r from-green to-green-dark text-white font-medium px-6 py-3 rounded-lg;
+    box-shadow: var(--shadow-green);
+    transition: var(--transition-spring);
+  }
+  
+  .btn-secondary:hover {
+    @apply scale-105;
+    box-shadow: var(--shadow-floating);
+  }
+  
+  /* Glass Effect */
+  .glass-card {
+    @apply backdrop-blur-md border border-white/20 rounded-xl;
+    background: var(--gradient-glass);
     transition: var(--transition-smooth);
   }
   
-  .btn-ripple::before {
-    content: '';
-    @apply absolute inset-0 opacity-0 transition-opacity duration-300;
-    background: radial-gradient(circle, hsl(var(--saffron) / 0.3) 0%, transparent 70%);
+  .glass-card:hover {
+    @apply border-white/30;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
   }
   
-  .btn-ripple:hover::before {
-    @apply opacity-100;
+  /* Enhanced Status Indicators */
+  .status-online {
+    @apply bg-green text-white px-3 py-1 rounded-full text-sm font-medium;
+    box-shadow: 0 0 16px hsl(var(--green) / 0.4);
   }
   
-  .btn-ripple:active::before {
-    background: radial-gradient(circle, hsl(var(--green) / 0.4) 0%, transparent 70%);
+  .status-processing {
+    @apply bg-saffron text-white px-3 py-1 rounded-full text-sm font-medium;
+    box-shadow: 0 0 16px hsl(var(--saffron) / 0.4);
+    animation: statusPulse 2s ease-in-out infinite;
   }
   
-  /* Chat Bubble Animations */
+  .status-offline {
+    @apply bg-muted text-muted-foreground px-3 py-1 rounded-full text-sm font-medium;
+  }
+  
+  /* Enhanced Input Styles */
+  .input-enhanced {
+    @apply bg-white/50 border-2 border-border rounded-lg px-4 py-3 text-base;
+    @apply focus:border-primary focus:ring-2 focus:ring-primary/20 focus:bg-white;
+    transition: var(--transition-smooth);
+  }
+  
+  /* Waveform Animation Enhanced */
+  .waveform-bar {
+    @apply bg-gradient-to-t from-saffron to-saffron-light rounded-full;
+    animation: waveform 1.5s ease-in-out infinite alternate;
+    box-shadow: 0 0 8px hsl(var(--saffron) / 0.4);
+  }
+  
+  @keyframes waveform {
+    0% { 
+      transform: scaleY(0.3);
+      box-shadow: 0 0 4px hsl(var(--saffron) / 0.2);
+    }
+    100% { 
+      transform: scaleY(1);
+      box-shadow: 0 0 12px hsl(var(--saffron) / 0.6);
+    }
+  }
+  
+  /* Chat Bubble Enhanced */
   .chat-bubble-enter {
     @apply opacity-0 translate-y-4 scale-95;
     animation: chatBubbleEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -177,40 +274,48 @@
     }
   }
   
-  /* Waveform Animation */
-  .waveform-bar {
-    @apply bg-primary;
-    animation: waveform 1.5s ease-in-out infinite alternate;
+  /* Modern Badge Styles */
+  .badge-modern {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium;
+    @apply bg-gradient-to-r from-saffron/10 to-green/10 text-navy;
+    border: 1px solid hsl(var(--border));
+    transition: var(--transition-smooth);
   }
   
-  @keyframes waveform {
-    0% { transform: scaleY(0.3); }
-    100% { transform: scaleY(1); }
+  .badge-modern:hover {
+    @apply bg-gradient-to-r from-saffron/20 to-green/20;
+    box-shadow: var(--shadow-card);
   }
   
-  /* Modal Slide Transitions */
-  .modal-enter {
-    @apply opacity-0 scale-95 translate-y-8;
-    animation: modalEnter 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  /* Floating Action Styles */
+  .floating-action {
+    @apply fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-floating;
+    @apply bg-gradient-to-r from-saffron to-saffron-dark text-white;
+    @apply flex items-center justify-center z-50;
+    transition: var(--transition-spring);
   }
   
-  @keyframes modalEnter {
-    to {
-      @apply opacity-100 scale-100 translate-y-0;
-    }
+  .floating-action:hover {
+    @apply scale-110;
+    box-shadow: var(--shadow-glow);
   }
   
-  /* Status Badge Pulse */
-  .status-pulse {
-    animation: statusPulse 2s ease-in-out infinite;
+  /* Modern Form Styles */
+  .form-group {
+    @apply space-y-2;
   }
   
-  @keyframes statusPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+  .form-label {
+    @apply text-sm font-medium text-navy block;
   }
   
-  /* Accessibility Helpers */
+  .form-input {
+    @apply w-full px-4 py-3 rounded-lg border-2 border-border bg-white/50;
+    @apply focus:border-primary focus:ring-2 focus:ring-primary/20;
+    @apply transition-all duration-200;
+  }
+  
+  /* Accessibility & Focus States */
   .focus-ring {
     @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
   }
@@ -220,13 +325,76 @@
     @apply focus:top-6 transition-all duration-300;
   }
   
-  /* Tricolor Hover Effects */
-  .tricolor-hover {
+  /* Government Header Styles */
+  .gov-header {
+    @apply bg-gradient-to-r from-saffron via-white-warm to-green;
+    @apply border-b-4 border-navy shadow-elegant;
+  }
+  
+  .gov-logo {
+    @apply w-12 h-12 rounded-full bg-white p-2 shadow-card;
     transition: var(--transition-spring);
   }
   
-  .tricolor-hover:hover {
-    box-shadow: var(--shadow-saffron);
-    transform: translateY(-2px);
+  .gov-logo:hover {
+    @apply scale-110;
+    box-shadow: var(--shadow-floating);
+  }
+  
+  /* Enhanced Animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.8;
+    }
+  }
+  
+  @keyframes statusPulse {
+    0%, 100% { 
+      transform: scale(1);
+      box-shadow: 0 0 16px hsl(var(--saffron) / 0.4);
+    }
+    50% { 
+      transform: scale(1.05);
+      box-shadow: 0 0 24px hsl(var(--saffron) / 0.6);
+    }
+  }
+  
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  .animate-slide-in-right {
+    animation: slideInRight 0.5s ease-out;
+  }
+  
+  .animate-pulse-gentle {
+    animation: pulse 3s ease-in-out infinite;
   }
 }
