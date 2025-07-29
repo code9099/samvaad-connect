@@ -3,7 +3,7 @@
  * Orchestrates ASR → NMT → TTS pipeline with BHASHINI
  */
 
-import { transcribeAudio, translateText, synthesizeSpeech, healthCheck } from '../../services/bhashiniClient.js';
+import { transcribeAudio, translateText, synthesizeSpeech, healthCheck, detectLanguage } from '../../services/bhashiniClient.js';
 
 // Retry configuration
 const RETRY_CONFIG = {
@@ -66,21 +66,40 @@ export default async function handler(req, res) {
   };
 
   try {
-    // Step 1: Audio to Text (ASR) if audio is provided
+    // Step 1: Language Detection or ASR if audio is provided
     if (audioBase64) {
-      console.log('Starting ASR for language:', sourceLang);
-      const asrResult = await withRetry(() => 
-        transcribeAudio(audioBase64, sourceLang)
-      );
-      
-      result.transcript = asrResult.transcript;
-      result.confidences.asr = asrResult.confidence;
-      text = asrResult.transcript; // Use transcribed text for translation
-      
-      console.log('ASR completed:', { 
-        transcript: result.transcript, 
-        confidence: asrResult.confidence 
-      });
+      if (sourceLang === 'auto') {
+        console.log('Starting automatic language detection...');
+        const detectionResult = await withRetry(() => 
+          detectLanguage(audioBase64)
+        );
+        
+        result.transcript = detectionResult.transcript;
+        result.confidences.asr = detectionResult.confidence;
+        result.detectedLanguage = detectionResult.detectedLanguage;
+        sourceLang = detectionResult.detectedLanguage; // Update source language
+        text = detectionResult.transcript;
+        
+        console.log('Language detection completed:', { 
+          detectedLanguage: sourceLang,
+          transcript: result.transcript, 
+          confidence: detectionResult.confidence 
+        });
+      } else {
+        console.log('Starting ASR for language:', sourceLang);
+        const asrResult = await withRetry(() => 
+          transcribeAudio(audioBase64, sourceLang)
+        );
+        
+        result.transcript = asrResult.transcript;
+        result.confidences.asr = asrResult.confidence;
+        text = asrResult.transcript; // Use transcribed text for translation
+        
+        console.log('ASR completed:', { 
+          transcript: result.transcript, 
+          confidence: asrResult.confidence 
+        });
+      }
     }
 
     // Step 2: Text Translation (NMT)

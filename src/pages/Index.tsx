@@ -161,6 +161,7 @@ const Index = () => {
             ? {
                 ...msg,
                 originalText: result.data.transcript || request.text || '',
+                originalLanguage: result.data.detectedLanguage || request.sourceLang, // Use detected language if available
                 translatedText: result.data.translation,
                 translatedLanguage: request.targetLang,
                 audioBase64: result.data.audioBase64Out,
@@ -171,7 +172,9 @@ const Index = () => {
         ));
 
         toast({
-          title: "Translation Complete",
+          title: result.data.detectedLanguage ? 
+            `Language Detected: ${SUPPORTED_LANGUAGES[result.data.detectedLanguage]}` : 
+            "Translation Complete",
           description: `Processed in ${result.data.processingTime}ms`,
           duration: 3000
         });

@@ -26,7 +26,8 @@ interface RecordingState {
 }
 
 export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessing }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState('hi');
+  const [selectedLanguageForText, setSelectedLanguageForText] = useState('hi'); // For text input only
+  const [detectedLanguage, setDetectedLanguage] = useState<string | null>(null); // For detected audio language
   const [textInput, setTextInput] = useState('');
   const [recording, setRecording] = useState<RecordingState>({
     isRecording: false,
@@ -191,19 +192,22 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
 
   const handleSubmit = () => {
     if (recording.audioBase64) {
+      // For audio submissions, use 'auto' for automatic language detection
       onSubmit({
         audioBase64: recording.audioBase64,
-        language: selectedLanguage
+        language: 'auto'
       });
     } else if (textInput.trim()) {
+      // For text submissions, use the selected language
       onSubmit({
         text: textInput.trim(),
-        language: selectedLanguage
+        language: selectedLanguageForText
       });
     }
 
     // Reset form
     setTextInput('');
+    setDetectedLanguage(null);
     setRecording({
       isRecording: false,
       isPaused: false,
@@ -222,18 +226,28 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
         <h2 className="text-lg font-pt-sans font-semibold text-foreground mb-2">
           नागरिक पैनल • Citizen Panel
         </h2>
-        <Select value={selectedLanguage} onValueChange={setSelectedLanguage}>
-          <SelectTrigger className="focus-ring">
-            <SelectValue placeholder="भाषा चुनें • Select Language" />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.entries(SUPPORTED_LANGUAGES).map(([code, name]: [string, string]) => (
-              <SelectItem key={code} value={code}>
-                {name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+        <div className="space-y-2">
+          <div className="text-sm text-muted-foreground">
+            🎤 Voice: Auto-detect language • 🖊️ Text: Select language
+          </div>
+          <Select value={selectedLanguageForText} onValueChange={setSelectedLanguageForText}>
+            <SelectTrigger className="focus-ring">
+              <SelectValue placeholder="भाषा चुनें • Select Language for Text" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.entries(SUPPORTED_LANGUAGES).map(([code, name]: [string, string]) => (
+                <SelectItem key={code} value={code}>
+                  {name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {detectedLanguage && (
+            <Badge variant="outline" className="text-xs">
+              🎤 Detected: {SUPPORTED_LANGUAGES[detectedLanguage]}
+            </Badge>
+          )}
+        </div>
       </div>
 
       {/* Audio Recording Section */}
@@ -296,7 +310,7 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
         <Textarea
           value={textInput}
           onChange={(e) => setTextInput(e.target.value)}
-          placeholder={`यहाँ टाइप करें... • Type here in ${SUPPORTED_LANGUAGES[selectedLanguage]}...`}
+          placeholder={`यहाँ टाइप करें... • Type here in ${SUPPORTED_LANGUAGES[selectedLanguageForText]}...`}
           className="flex-1 resize-none focus-ring text-base"
           disabled={isProcessing || recording.isRecording}
           aria-label="Text input for your message"

@@ -87,6 +87,61 @@ async function getComputeServices(taskType, sourceLanguage, targetLanguage = nul
 }
 
 /**
+ * Detect language from audio using BHASHINI ASR with multiple language attempts
+ * @param {string} audioBase64 - Base64 encoded audio
+ * @returns {Promise<{detectedLanguage: string, confidence: number, transcript: string}>}
+ */
+export async function detectLanguage(audioBase64) {
+  const languagesToTry = ['hi', 'en', 'ta', 'te', 'ur', 'mr', 'bn']; // Priority order
+  let bestResult = null;
+  let bestConfidence = 0;
+  
+  try {
+    // Try each language and compare confidence scores
+    for (const language of languagesToTry) {
+      try {
+        const result = await transcribeAudio(audioBase64, language);
+        
+        // Consider both ASR confidence and transcript quality
+        const transcriptLength = result.transcript.trim().length;
+        const adjustedConfidence = result.confidence * (transcriptLength > 5 ? 1 : 0.7);
+        
+        if (adjustedConfidence > bestConfidence && transcriptLength > 0) {
+          bestConfidence = adjustedConfidence;
+          bestResult = {
+            detectedLanguage: language,
+            confidence: result.confidence,
+            transcript: result.transcript
+          };
+        }
+      } catch (error) {
+        console.warn(`Failed to detect language ${language}:`, error);
+        continue;
+      }
+    }
+    
+    if (bestResult && bestConfidence > 0.3) { // Minimum confidence threshold
+      return bestResult;
+    } else {
+      // Fallback to Hindi if no language detected with good confidence
+      return {
+        detectedLanguage: 'hi',
+        confidence: 0.5,
+        transcript: ''
+      };
+    }
+  } catch (error) {
+    console.error('Error in language detection:', error);
+    // Fallback to Hindi
+    return {
+      detectedLanguage: 'hi',
+      confidence: 0.5,
+      transcript: ''
+    };
+  }
+}
+
+/**
  * Transcribe audio to text using BHASHINI ASR
  * @param {string} audioBase64 - Base64 encoded audio
  * @param {string} sourceLanguage - Source language code (hi, en, ta, te, ur, mr, bn)
