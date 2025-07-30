@@ -201,7 +201,7 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
     });
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     console.log('Submit button clicked');
     console.log('canSubmit:', canSubmit);
     console.log('textInput:', textInput);
@@ -213,56 +213,39 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
       return;
     }
 
-    try {
-      let audio_url = '';
-      
-      // If audio is recorded, use the base64 audio data
-      if (recording.audioBase64) {
-        audio_url = `data:audio/webm;base64,${recording.audioBase64}`;
-        console.log('Using audio data for submission');
-      } else if (textInput.trim()) {
-        console.log('Using text data for submission:', textInput.trim());
-      }
-
-      console.log('Making API call...');
-      
-      // Make the API call
-      const response = await fetch('https://eiouekjxflstcaicmixv.supabase.co/functions/v1/translator', {
-        method: 'POST',
-        headers: {
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpb3Vla2p4ZmxzdGNhaWNtaXh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4NjkwNTQsImV4cCI6MjA2OTQ0NTA1NH0.S1wfBYOoZmrHZTgryglciiPRiZU3CXSEjnGRRTfTgz8',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          audio_url: audio_url,
-          source_lang: 'hi',
-          target_lang: 'en',
-          conversation_id: '4cfb1cd9-cb66-4550-ba3e-397806ef0543'
-        })
-      });
-
-      console.log('API response status:', response.status);
-
-      if (response.ok) {
-        const result = await response.json();
-        console.log('API call successful:', result);
-        
-        // Reset form after successful submission
-        setTextInput('');
-        setDetectedLanguage(null);
-        setRecording({
-          isRecording: false,
-          isPaused: false,
-          duration: 0,
-          audioBlob: null,
-          audioBase64: null
-        });
-      } else {
-        console.error('API call failed:', response.status, response.statusText);
-      }
-    } catch (error) {
-      console.error('Error making API call:', error);
+    // Determine which data to send and language
+    let submissionData: { text?: string; audioBase64?: string; language: string };
+    
+    if (recording.audioBase64) {
+      console.log('Using audio data for submission');
+      submissionData = {
+        audioBase64: recording.audioBase64,
+        language: detectedLanguage || 'hi' // Use detected language or default to Hindi
+      };
+    } else if (textInput.trim()) {
+      console.log('Using text data for submission:', textInput.trim());
+      submissionData = {
+        text: textInput.trim(),
+        language: selectedLanguageForText
+      };
+    } else {
+      console.log('No valid input to submit');
+      return;
     }
+
+    console.log('Calling onSubmit with data:', submissionData);
+    onSubmit(submissionData);
+
+    // Reset form after submission
+    setTextInput('');
+    setDetectedLanguage(null);
+    setRecording({
+      isRecording: false,
+      isPaused: false,
+      duration: 0,
+      audioBlob: null,
+      audioBase64: null
+    });
   };
 
   const canSubmit = (textInput.trim() || recording.audioBase64) && !isProcessing;
