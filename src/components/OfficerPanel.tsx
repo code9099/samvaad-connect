@@ -43,12 +43,20 @@ export const OfficerPanel: React.FC<OfficerPanelProps> = ({
   const [isRecording, setIsRecording] = useState(false);
 
   const handleSubmit = () => {
+    console.log('Officer submit button clicked');
+    console.log('textInput:', textInput);
+    console.log('canSubmit:', canSubmit);
+    console.log('isProcessing:', isProcessing);
+    
     if (textInput.trim()) {
+      console.log('Calling onSubmit with text:', textInput.trim());
       onSubmit({
         text: textInput.trim(),
         language: selectedLanguage
       });
       setTextInput('');
+    } else {
+      console.log('No text input to submit');
     }
   };
 
@@ -108,7 +116,10 @@ export const OfficerPanel: React.FC<OfficerPanelProps> = ({
         <div className="grid grid-cols-1 gap-2">
           <Button
             variant="outline"
-            onClick={onOpenLegalAssistant}
+            onClick={() => {
+              console.log('Legal Assistant button clicked');
+              onOpenLegalAssistant();
+            }}
             className="btn-ripple focus-ring justify-start"
             aria-label="Open Legal Assistant"
           >
@@ -118,7 +129,10 @@ export const OfficerPanel: React.FC<OfficerPanelProps> = ({
           
           <Button
             variant="outline"
-            onClick={onOpenFIRChecklist}
+            onClick={() => {
+              console.log('FIR Checklist button clicked');
+              onOpenFIRChecklist();
+            }}
             className="btn-ripple focus-ring justify-start"
             aria-label="Open FIR Checklist"
           >

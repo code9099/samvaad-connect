@@ -87,6 +87,7 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
   };
 
   const startRecording = async () => {
+    console.log('Start recording button clicked');
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ 
         audio: {
@@ -97,6 +98,7 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
         } 
       });
       
+      console.log('Media stream obtained successfully');
       streamRef.current = stream;
 
       // Set up audio analysis for waveform
@@ -119,8 +121,11 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
       };
 
       mediaRecorderRef.current.onstop = async () => {
+        console.log('Recording stopped, processing audio...');
         const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
         const audioBase64 = await blobToBase64(audioBlob);
+        
+        console.log('Audio processed, base64 length:', audioBase64.length);
         
         setRecording(prev => ({
           ...prev,
@@ -131,6 +136,7 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
       };
 
       mediaRecorderRef.current.start();
+      console.log('MediaRecorder started');
 
       // Start duration timer
       intervalRef.current = setInterval(() => {
@@ -156,11 +162,15 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
   };
 
   const stopRecording = () => {
+    console.log('Stop recording button clicked');
+    
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+      console.log('Stopping media recorder');
       mediaRecorderRef.current.stop();
     }
 
     if (streamRef.current) {
+      console.log('Stopping media stream');
       streamRef.current.getTracks().forEach(track => track.stop());
     }
 
@@ -175,6 +185,7 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
     }
 
     setWaveformData(new Array(20).fill(0));
+    console.log('Recording cleanup completed');
   };
 
   const blobToBase64 = (blob: Blob): Promise<string> => {
@@ -191,14 +202,30 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
   };
 
   const handleSubmit = async () => {
+    console.log('Submit button clicked');
+    console.log('canSubmit:', canSubmit);
+    console.log('textInput:', textInput);
+    console.log('recording.audioBase64:', !!recording.audioBase64);
+    console.log('isProcessing:', isProcessing);
+    
+    if (!canSubmit) {
+      console.log('Submit blocked by canSubmit condition');
+      return;
+    }
+
     try {
       let audio_url = '';
       
       // If audio is recorded, use the base64 audio data
       if (recording.audioBase64) {
         audio_url = `data:audio/webm;base64,${recording.audioBase64}`;
+        console.log('Using audio data for submission');
+      } else if (textInput.trim()) {
+        console.log('Using text data for submission:', textInput.trim());
       }
 
+      console.log('Making API call...');
+      
       // Make the API call
       const response = await fetch('https://eiouekjxflstcaicmixv.supabase.co/functions/v1/translator', {
         method: 'POST',
@@ -214,8 +241,12 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
         })
       });
 
+      console.log('API response status:', response.status);
+
       if (response.ok) {
-        console.log('API call successful');
+        const result = await response.json();
+        console.log('API call successful:', result);
+        
         // Reset form after successful submission
         setTextInput('');
         setDetectedLanguage(null);
