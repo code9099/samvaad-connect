@@ -190,31 +190,48 @@ export const CitizenPanel: React.FC<CitizenPanelProps> = ({ onSubmit, isProcessi
     });
   };
 
-  const handleSubmit = () => {
-    if (recording.audioBase64) {
-      // For audio submissions, use 'auto' for automatic language detection
-      onSubmit({
-        audioBase64: recording.audioBase64,
-        language: 'auto'
-      });
-    } else if (textInput.trim()) {
-      // For text submissions, use the selected language
-      onSubmit({
-        text: textInput.trim(),
-        language: selectedLanguageForText
-      });
-    }
+  const handleSubmit = async () => {
+    try {
+      let audio_url = '';
+      
+      // If audio is recorded, use the base64 audio data
+      if (recording.audioBase64) {
+        audio_url = `data:audio/webm;base64,${recording.audioBase64}`;
+      }
 
-    // Reset form
-    setTextInput('');
-    setDetectedLanguage(null);
-    setRecording({
-      isRecording: false,
-      isPaused: false,
-      duration: 0,
-      audioBlob: null,
-      audioBase64: null
-    });
+      // Make the API call
+      const response = await fetch('https://eiouekjxflstcaicmixv.supabase.co/functions/v1/translator', {
+        method: 'POST',
+        headers: {
+          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpb3Vla2p4ZmxzdGNhaWNtaXh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4NjkwNTQsImV4cCI6MjA2OTQ0NTA1NH0.S1wfBYOoZmrHZTgryglciiPRiZU3CXSEjnGRRTfTgz8',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          audio_url: audio_url,
+          source_lang: 'hi',
+          target_lang: 'en',
+          conversation_id: '4cfb1cd9-cb66-4550-ba3e-397806ef0543'
+        })
+      });
+
+      if (response.ok) {
+        console.log('API call successful');
+        // Reset form after successful submission
+        setTextInput('');
+        setDetectedLanguage(null);
+        setRecording({
+          isRecording: false,
+          isPaused: false,
+          duration: 0,
+          audioBlob: null,
+          audioBase64: null
+        });
+      } else {
+        console.error('API call failed:', response.status, response.statusText);
+      }
+    } catch (error) {
+      console.error('Error making API call:', error);
+    }
   };
 
   const canSubmit = (textInput.trim() || recording.audioBase64) && !isProcessing;
